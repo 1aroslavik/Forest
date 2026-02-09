@@ -10,11 +10,9 @@ Assets/ADG_Textures/
 Assets/HDRPDefaultResources/
 Assets/IgniteCoders/
 Assets/RockFREE/
-Assets/Terrain/
 Assets/TerrainSampleAssets/
 Assets/TextMesh Pro/
 Assets/TutorialInfo/
-Assets/_TerrainAutoUpgrade/
 
 # Keep only project code/content
 !Assets/_Project/**
