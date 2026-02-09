@@ -4,7 +4,11 @@
 [Oo]bj/
 [Ll]ogs/
 .vs/
-
+.vsconfig
+*.sln
+*.csproj
+Assembly-CSharp
+Assembly-CSharp-Editor
 # Asset Store / third-party
 Assets/ADG_Textures/
 Assets/HDRPDefaultResources/
