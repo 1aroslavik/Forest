@@ -17,6 +17,8 @@ Assets/RockFREE/
 Assets/TerrainSampleAssets/
 Assets/TextMesh Pro/
 Assets/TutorialInfo/
+Assets/AwesomeFreeScans/
+
 
 # Keep only project code/content
 !Assets/_Project/**
