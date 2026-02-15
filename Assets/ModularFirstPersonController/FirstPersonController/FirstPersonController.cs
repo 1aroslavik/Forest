@@ -4,11 +4,17 @@ using UnityEngine.UI;
 public class FirstPersonController : MonoBehaviour
 {
     private Rigidbody rb;
+
+    [Header("WATER")]
+    public bool isInWater = false;
+    public float swimSpeed = 3f;
+    public float swimVerticalSpeed = 3f;
+    public float waterDrag = 3f;
+
     [Header("Sprint Thresholds")]
     public float staminaToStartSprint = 30f;
     public float staminaToStopSprint = 5f;
     bool sprintLocked;
-
 
     [Header("STATS")]
     public PlayerStats stats;
@@ -97,18 +103,21 @@ public class FirstPersonController : MonoBehaviour
         }
         #endregion
 
-        #region Jump
         if (enableJump && Input.GetKeyDown(jumpKey))
             Jump();
-        #endregion
 
         CheckGround();
         UpdateSprintBar();
     }
 
-
-void FixedUpdate()
+    void FixedUpdate()
     {
+        if (isInWater)
+        {
+            HandleSwimming();
+            return;
+        }
+
         if (!playerCanMove) return;
 
         Vector3 input = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
@@ -118,13 +127,8 @@ void FixedUpdate()
 
         isWalking = hasMoveInput && isGrounded;
 
-        // ==============================
-        // SPRINT STATE MACHINE (NO JITTER)
-        // ==============================
-
         if (!sprintLocked)
         {
-            // ПЫТАЕМСЯ НАЧАТЬ БЕГ
             if (enableSprint &&
                 hasMoveInput &&
                 Input.GetKey(sprintKey) &&
@@ -136,7 +140,6 @@ void FixedUpdate()
         }
         else
         {
-            // ПРОВЕРЯЕМ, НУЖНО ЛИ ОСТАНОВИТЬ БЕГ
             if (!Input.GetKey(sprintKey) ||
                 !hasMoveInput ||
                 stats == null ||
@@ -145,10 +148,6 @@ void FixedUpdate()
                 sprintLocked = false;
             }
         }
-
-        // ==============================
-        // APPLY MOVEMENT
-        // ==============================
 
         if (sprintLocked)
         {
@@ -176,19 +175,11 @@ void FixedUpdate()
             );
         }
 
-        // ==============================
-        // SEND STATE TO STATS (REGEN LOGIC)
-        // ==============================
-
         if (stats != null)
         {
             stats.isWalking = isWalking && !isSprinting;
             stats.isSprinting = isSprinting;
         }
-
-        // ==============================
-        // PHYSICS (НЕ ТРОГАЕМ)
-        // ==============================
 
         Vector3 velocity = rb.linearVelocity;
         Vector3 velocityChange = targetVelocity - velocity;
@@ -199,6 +190,40 @@ void FixedUpdate()
 
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
     }
+
+    void HandleSwimming()
+    {
+        rb.useGravity = true; // гравитация должна быть включена
+        rb.angularDamping = 2f;
+
+        float waterLevel = 10f;   // уровень воды
+        float objectHeight = 2f;  // примерная высота капсулы
+
+        float bottom = transform.position.y - objectHeight * 0.5f;
+        float top = transform.position.y + objectHeight * 0.5f;
+
+        float submerged = Mathf.Clamp01((waterLevel - bottom) / objectHeight);
+
+        // Плавучесть (Архимед)
+        Vector3 buoyancy = Vector3.up * Physics.gravity.magnitude * submerged * 1.2f;
+        rb.AddForce(buoyancy, ForceMode.Acceleration);
+
+        // Сопротивление воды (квадратичное)
+        Vector3 drag = -rb.linearVelocity * rb.linearVelocity.magnitude * 0.5f;
+        rb.AddForce(drag, ForceMode.Acceleration);
+
+        // Управление — это просто добавление силы
+        float h = Input.GetAxis("Horizontal");
+        float v = Input.GetAxis("Vertical");
+
+        Vector3 camForward = playerCamera.transform.forward;
+        Vector3 camRight = playerCamera.transform.right;
+
+        Vector3 moveDir = camForward * v + camRight * h;
+
+        rb.AddForce(moveDir * swimSpeed, ForceMode.Acceleration);
+    }
+
 
 
 

@@ -10,7 +10,6 @@ public class WaterDrinkDetector : MonoBehaviour
     [Header("Settings")]
     public float forwardOffset = 1.2f;
     public float downDistance = 3f;
-    public float maxDistance = 2.5f;
     public KeyCode drinkKey = KeyCode.E;
     public LayerMask waterLayer;
 
@@ -26,7 +25,13 @@ public class WaterDrinkDetector : MonoBehaviour
     {
         currentWater = null;
 
-        // точка перед игроком
+        //// ❌ если плаваем — не показываем hint вообще
+        //if (waterState != null && waterState.IsSwimming)
+        //{
+        //    hint.SetActive(false);
+        //    return;
+        //}
+
         Vector3 origin =
             cam.transform.position +
             cam.transform.forward * forwardOffset;
@@ -40,16 +45,13 @@ public class WaterDrinkDetector : MonoBehaviour
                 hit.collider.GetComponentInParent<IWaterSource>();
         }
 
-        if (currentWater != null)
-            hint.SetActive(true);
-        else
-            hint.SetActive(false);
-
+        hint.SetActive(currentWater != null);
     }
 
     void HandleDrink()
     {
         if (currentWater == null) return;
+       // if (waterState != null && waterState.IsSwimming) return;
         if (!Input.GetKey(drinkKey)) return;
 
         if (!currentWater.CanDrink()) return;

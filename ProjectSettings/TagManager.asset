@@ -6,6 +6,7 @@ TagManager:
   tags:
   - ChopZone
   - Water
+  - SwimZone
   layers:
   - Default
   - TransparentFX
