@@ -3,3 +3,4 @@ https://assetstore.unity.com/packages/3d/environments/landscapes/terrain-sample-
 https://assetstore.unity.com/packages/2d/textures-materials/water/simple-water-shader-urp-191449
 https://assetstore.unity.com/packages/3d/props/exterior/rocks-free-pack-98219
 https://assetstore.unity.com/packages/3d/props/radioactive-barrel-343454
+https://assetstore.unity.com/packages/vfx/particles/particle-pack-127325
