@@ -19,6 +19,10 @@ Assets/TextMesh Pro/
 Assets/TutorialInfo/
 Assets/AwesomeFreeScans/
 Assets/H&L Assets/
-
+Assets/Survival Tools/
+Assets/Survival Props/
+Assets/UnityTechnologies/
+# Unity local settings
+UserSettings/
 # Keep only project code/content
 !Assets/_Project/**

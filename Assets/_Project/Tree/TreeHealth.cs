@@ -16,6 +16,7 @@ public class TreeHealth : MonoBehaviour
 
     Rigidbody rb;
     bool fallen = false;
+    public bool IsFallen => fallen;   // 👈 ДОБАВИЛИ
 
     void Awake()
     {
