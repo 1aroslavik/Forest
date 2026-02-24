@@ -10,6 +10,7 @@
 *.csproj
 Assembly-CSharp
 Assembly-CSharp-Editor
+UserSettings/
 
 # Asset Store / third-party
 Assets/ADG_Textures/
@@ -29,8 +30,9 @@ Assets/T.
 Assets/Abandoned Wood/
 Assets/Wood Box Free/
 Assets/Survival Props/
+<<<<<<< HEAD
 Assets/AllSkyFree/
-
+Assets/Animal Pack Deluxe/
 # Unity local settings
 UserSettings/
 
