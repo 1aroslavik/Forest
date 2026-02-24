@@ -1,36 +1,80 @@
-using UnityEngine;
+﻿using UnityEngine;
+using TMPro;
 
 public class ItemPickUp : MonoBehaviour
 {
+    [Header("References")]
     public InventoryModel inventory;
-    Camera camera;
-    public float pickupDistance = 3f;
     public InventoryView inventoryView;
+    public Camera playerCamera;
+    public LayerMask pickupLayer;
 
-    private void Start()
+    [Header("UI")]
+    public GameObject pickupHint;
+
+    [Header("Settings")]
+    public float pickupDistance = 3f;
+    public KeyCode pickupKey = KeyCode.E;
+
+    WorldItem currentItem;
+
+    void Start()
     {
-        camera = Camera.main;
+        if (playerCamera == null)
+            playerCamera = Camera.main;
+
+        if (pickupHint != null)
+            pickupHint.SetActive(false);
     }
 
     void Update()
     {
-        if (!Input.GetKeyDown(KeyCode.E))
-            return;
+        CheckForItem();
 
-        Ray ray = camera.ViewportPointToRay(new Vector3(0.5f, 0.5f));
-
-        if (Physics.Raycast(ray, out RaycastHit hit, pickupDistance))
+        if (Input.GetKeyDown(pickupKey) && currentItem != null)
         {
-            var worldItem = hit.collider.GetComponent<WorldItem>();
-            if (worldItem == null)
-                return;
-
-            bool added = inventory.TryAdd(worldItem.data, worldItem.amount);
-            if (added)
-                Destroy(worldItem.gameObject);
-                inventoryView.Render();
+            TryPickUp();
         }
     }
 
+    void CheckForItem()
+    {
+        currentItem = null;
 
+        Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+        if (Physics.Raycast(ray, out RaycastHit hit, pickupDistance, pickupLayer))
+        {
+            WorldItem item = hit.collider.GetComponentInParent<WorldItem>();
+
+            if (item != null)
+            {
+                currentItem = item;
+
+                if (pickupHint != null)
+                    pickupHint.SetActive(true);
+
+                return;
+            }
+        }
+
+        if (pickupHint != null)
+            pickupHint.SetActive(false);
+    }
+
+    void TryPickUp()
+    {
+        bool added = inventory.TryAdd(currentItem.data, currentItem.amount);
+
+        if (added)
+        {
+            Destroy(currentItem.gameObject);
+
+            if (inventoryView != null)
+                inventoryView.Render();
+
+            if (pickupHint != null)
+                pickupHint.SetActive(false);
+        }
+    }
 }

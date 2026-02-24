@@ -2,18 +2,17 @@
 
 public class WaterDrinkDetector : MonoBehaviour
 {
-    [Header("Refs")]
+    [Header("References")]
     public Camera cam;
     public PlayerStats stats;
     public GameObject hint;
 
     [Header("Settings")]
-    public float forwardOffset = 1.2f;
-    public float downDistance = 3f;
+    public float detectDistance = 3f;
     public KeyCode drinkKey = KeyCode.E;
     public LayerMask waterLayer;
 
-    IWaterSource currentWater;
+    private IWaterSource currentWater;
 
     void Update()
     {
@@ -25,39 +24,35 @@ public class WaterDrinkDetector : MonoBehaviour
     {
         currentWater = null;
 
-        //// ❌ если плаваем — не показываем hint вообще
-        //if (waterState != null && waterState.IsSwimming)
-        //{
-        //    hint.SetActive(false);
-        //    return;
-        //}
+        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
+        RaycastHit hit;
 
-        Vector3 origin =
-            cam.transform.position +
-            cam.transform.forward * forwardOffset;
-
-        Debug.DrawRay(origin, Vector3.down * downDistance, Color.cyan);
-
-        if (Physics.Raycast(origin, Vector3.down, out RaycastHit hit, downDistance, waterLayer))
+        if (Physics.Raycast(ray, out hit, detectDistance, waterLayer))
         {
-            currentWater =
+            IWaterSource water =
                 hit.collider.GetComponent<IWaterSource>() ??
                 hit.collider.GetComponentInParent<IWaterSource>();
+
+            if (water != null)
+            {
+                currentWater = water;
+            }
         }
 
-        hint.SetActive(currentWater != null);
+        // Включаем hint только если реально смотрим на воду
+        if (hint != null)
+            hint.SetActive(currentWater != null);
     }
 
     void HandleDrink()
     {
         if (currentWater == null) return;
-       // if (waterState != null && waterState.IsSwimming) return;
+
         if (!Input.GetKey(drinkKey)) return;
 
         if (!currentWater.CanDrink()) return;
 
-        float amount =
-            currentWater.GetDrinkRate() * Time.deltaTime;
+        float amount = currentWater.GetDrinkRate() * Time.deltaTime;
 
         stats.Drink(amount);
     }

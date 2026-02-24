@@ -1,8 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class InventorySlotHover :
-    MonoBehaviour,
+public class InventorySlotHover : MonoBehaviour,
     IPointerEnterHandler,
     IPointerExitHandler
 {
@@ -11,16 +10,18 @@ public class InventorySlotHover :
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (model == null) return;
+        if (slotIndex >= model.slots.Count) return;
+
         var slot = model.slots[slotIndex];
+
         if (!slot.isEmpty)
+        {
             InventoryTooltip.Instance.Show(slot);
-   
-        Debug.Log("HOVER SLOT " + slotIndex);
-    
+        }
+    }
 
-}
-
-public void OnPointerExit(PointerEventData eventData)
+    public void OnPointerExit(PointerEventData eventData)
     {
         InventoryTooltip.Instance.Hide();
     }

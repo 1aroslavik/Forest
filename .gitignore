@@ -10,6 +10,7 @@
 *.csproj
 Assembly-CSharp
 Assembly-CSharp-Editor
+
 # Asset Store / third-party
 Assets/ADG_Textures/
 Assets/HDRPDefaultResources/
@@ -20,11 +21,18 @@ Assets/TextMesh Pro/
 Assets/TutorialInfo/
 Assets/AwesomeFreeScans/
 Assets/H&L Assets/
+Assets/Survival Tools/
+Assets/Survival Props/
+Assets/UnityTechnologies/
 Assets/Terrain_Textures/
 Assets/T.
 Assets/Abandoned Wood/
 Assets/Wood Box Free/
 Assets/First aid kit free/
 Assets/Survival Kit Free/
+
+# Unity local settings
+UserSettings/
+
 # Keep only project code/content
 !Assets/_Project/**
