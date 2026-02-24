@@ -1,7 +1,9 @@
+using TMPro;
 using UnityEngine;
 
 public class ChestInteract : MonoBehaviour
 {
+    [Header("Lid")]
     public Transform lid;
     public float openAngle = -110f;
     public float speed = 4f;
@@ -10,6 +12,8 @@ public class ChestInteract : MonoBehaviour
     public GameObject[] possibleItems;     // префабы предметов
     public Transform[] spawnPoints;        // точки спавна
 
+    [Header("UI")]
+    public GameObject openHint;
     private bool playerInside;
     private bool isOpen;
     private bool spawned;
@@ -21,6 +25,9 @@ public class ChestInteract : MonoBehaviour
     {
         closedRot = lid.localRotation;
         openRot = Quaternion.Euler(openAngle, 0f, 0f);
+
+        if (openHint != null)
+            openHint.SetActive(false);
     }
 
     void Update()
@@ -31,13 +38,16 @@ public class ChestInteract : MonoBehaviour
             {
                 isOpen = true;
 
+                // скрываем подсказку
+                if (openHint != null)
+                    openHint.SetActive(false);
+
                 if (!spawned)
                 {
                     SpawnLoot();
                     spawned = true;
                 }
             }
-           
         }
 
         Quaternion target = isOpen ? openRot : closedRot;
@@ -69,6 +79,7 @@ public class ChestInteract : MonoBehaviour
     void SetLayerRecursively(GameObject obj, int layer)
     {
         obj.layer = layer;
+
         foreach (Transform child in obj.transform)
             SetLayerRecursively(child.gameObject, layer);
     }
@@ -76,12 +87,22 @@ public class ChestInteract : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             playerInside = true;
+
+            if (!isOpen && openHint != null)
+                openHint.SetActive(true);
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
+        {
             playerInside = false;
+
+            if (openHint != null)
+                openHint.SetActive(false);
+        }
     }
 }
