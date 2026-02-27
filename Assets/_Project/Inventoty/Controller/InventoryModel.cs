@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class InventoryModel : MonoBehaviour
@@ -16,29 +16,46 @@ public class InventoryModel : MonoBehaviour
 
     public bool TryAdd(ItemData data, int amount)
     {
+        // 1️⃣ Если предмет стакаемый — сначала ищем существующий стак
         if (data.isStackable)
         {
             foreach (var slot in slots)
             {
-                if (slot.data & slot.amount < data.maxStack)
-                { 
+                if (!slot.isEmpty &&
+                    slot.data == data &&
+                    slot.amount < data.maxStack)
+                {
                     int space = data.maxStack - slot.amount;
                     int toAdd = Mathf.Min(space, amount);
+
                     slot.amount += toAdd;
                     amount -= toAdd;
+
+                    if (amount <= 0)
+                        return true;
                 }
             }
         }
 
+        // 2️⃣ Если что-то осталось — кладём в пустой слот
         foreach (var slot in slots)
         {
             if (slot.isEmpty)
             {
+                int toAdd = data.isStackable
+                    ? Mathf.Min(amount, data.maxStack)
+                    : 1;
+
                 slot.data = data;
-                slot.amount = amount;
-                return true;
+                slot.amount = toAdd;
+
+                amount -= toAdd;
+
+                if (amount <= 0)
+                    return true;
             }
         }
-        return false;
+
+        return false; // если нет места
     }
 }
