@@ -3,16 +3,14 @@ using UnityEngine;
 
 public class TerrainTreeChopper : MonoBehaviour
 {
-    [Header("Terrain")]
     public Terrain terrain;
 
-    [Header("Choppable prefabs (order = Terrain Tree Prototypes)")]
-    public GameObject[] treePrefabs;   // 0..3
+    [Header("Assign prefabs in SAME order as Terrain prototypes")]
+    public GameObject[] treePrefabs;
 
-    [Header("Settings")]
-    public float searchRadius = 2.5f;
+    public float searchRadius = 5f;
 
-    private TerrainData data;
+    TerrainData data;
 
     void Awake()
     {
@@ -21,7 +19,7 @@ public class TerrainTreeChopper : MonoBehaviour
 
         if (!terrain)
         {
-            Debug.LogError("TerrainTreeChopper: No Terrain found!");
+            Debug.LogError("NO TERRAIN FOUND");
             enabled = false;
             return;
         }
@@ -29,18 +27,13 @@ public class TerrainTreeChopper : MonoBehaviour
         data = terrain.terrainData;
     }
 
-    /// <summary>
-    /// Удаляет ближайшее Terrain-дерево и спавнит prefab
-    /// с тем же типом и размером
-    /// </summary>
     public GameObject TryChopAndSpawn(Vector3 hitPoint)
     {
-        var trees = new List<TreeInstance>(data.treeInstances);
+        List<TreeInstance> trees = new List<TreeInstance>(data.treeInstances);
 
         int closestIndex = -1;
         float closestDist = float.MaxValue;
 
-        // 🔍 ищем ближайшее Terrain-дерево
         for (int i = 0; i < trees.Count; i++)
         {
             Vector3 worldPos = TreeToWorld(trees[i]);
@@ -56,53 +49,61 @@ public class TerrainTreeChopper : MonoBehaviour
         if (closestIndex == -1)
             return null;
 
-        TreeInstance ti = trees[closestIndex];
-        int protoIndex = ti.prototypeIndex;
+        TreeInstance tree = trees[closestIndex];
 
-        if (protoIndex < 0 || protoIndex >= treePrefabs.Length)
+        // 🔥 ВАЖНО: индекс Terrain должен совпадать с массивом
+        if (tree.prototypeIndex >= treePrefabs.Length)
         {
-            Debug.LogError($"No prefab for prototype index {protoIndex}");
+            Debug.LogError("Prototype index out of range!");
             return null;
         }
 
-        // 🌍 позиция дерева
-        Vector3 spawnPos = TreeToWorld(ti);
+        GameObject prefab = treePrefabs[tree.prototypeIndex];
 
-        // ❌ удаляем дерево из Terrain
+        if (prefab == null)
+        {
+            Debug.LogError("Prefab not assigned in array!");
+            return null;
+        }
+
+        Vector3 spawnPos = TreeToWorld(tree);
+
+        // Удаляем из terrain
         trees.RemoveAt(closestIndex);
         data.treeInstances = trees.ToArray();
-
-        // 🔥 ОБЯЗАТЕЛЬНО
         terrain.Flush();
 
-        // 🌳 спавним prefab
-        GameObject spawned = Instantiate(
-            treePrefabs[protoIndex],
-            spawnPos,
-            Quaternion.identity
-        );
+        // Rotation
+        Quaternion rotation = Quaternion.Euler(0f, tree.rotation * Mathf.Rad2Deg, 0f);
 
-        // 📏 ПРИМЕНЯЕМ РАЗМЕР TERRAIN-ДЕРЕВА
-        Vector3 scale = spawned.transform.localScale;
-        scale.x *= ti.widthScale;
-        scale.z *= ti.widthScale;
-        scale.y *= ti.heightScale;
-        spawned.transform.localScale = scale;
+        GameObject spawned = Instantiate(prefab, spawnPos, rotation);
+        Physics.SyncTransforms();
 
-        // 🔄 (опционально) поворот как у Terrain
-        spawned.transform.rotation =
-            Quaternion.Euler(0f, ti.rotation * Mathf.Rad2Deg, 0f);
+
+        // 🔥 ГАРАНТИРУЕМ Rigidbody
+        Rigidbody rb = spawned.GetComponentInChildren<Rigidbody>(true);
+
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = true;
+        }
+        else
+        {
+            Debug.LogError("NO RIGIDBODY FOUND ON SPAWNED TREE");
+        }
 
         return spawned;
     }
 
-    // Перевод координат Terrain → World
-    private Vector3 TreeToWorld(TreeInstance tree)
+    Vector3 TreeToWorld(TreeInstance tree)
     {
         Vector3 p = tree.position;
+
         p.x *= data.size.x;
         p.y *= data.size.y;
         p.z *= data.size.z;
+
         return terrain.transform.position + p;
     }
 }

@@ -27,8 +27,10 @@ public class AxeHit : MonoBehaviour
             }
 
             // 2️⃣ terrain-дерево
-            if (hit.collider.GetComponent<TerrainCollider>())
+            if (hit.collider is TerrainCollider)
             {
+                Debug.Log("HIT TERRAIN");
+
                 GameObject spawnedTree =
                     terrainChopper.TryChopAndSpawn(hit.point);
 

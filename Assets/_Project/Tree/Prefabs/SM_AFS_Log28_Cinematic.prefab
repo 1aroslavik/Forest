@@ -11,11 +11,10 @@ GameObject:
   - component: {fileID: 1050461269370620285}
   - component: {fileID: 4124214653061121752}
   - component: {fileID: 2222755294230589970}
-  - component: {fileID: 2841743343717518215}
   - component: {fileID: 1233685437780598996}
-  - component: {fileID: 872304117654596745}
   - component: {fileID: 1633716189665039892}
-  m_Layer: 0
+  - component: {fileID: -7050996301581829250}
+  m_Layer: 6
   m_Name: SM_AFS_Log28_Cinematic
   m_TagString: Log
   m_Icon: {fileID: 0}
@@ -98,28 +97,6 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &2841743343717518215
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421135329707430855}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 0
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -1232400927197821730, guid: d715894827541954cb84db707b01ff7f, type: 3}
 --- !u!54 &1233685437780598996
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -147,8 +124,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!136 &872304117654596745
-CapsuleCollider:
+--- !u!114 &1633716189665039892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 421135329707430855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 180ea7961b5b94440a7ab21887dc0728, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuiltLog
+  logType: 0
+--- !u!65 &-7050996301581829250
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -165,24 +155,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.04613705
-  m_Height: 0.3938216
-  m_Direction: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0922741, y: 0.3938216, z: 0.08031243}
   m_Center: {x: 0.00080374815, y: 0.19198716, z: -0.0003631711}
---- !u!114 &1633716189665039892
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 421135329707430855}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 180ea7961b5b94440a7ab21887dc0728, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::BuiltLog
-  logType: 0
 --- !u!1 &917588629431250202
 GameObject:
   m_ObjectHideFlags: 0
@@ -194,7 +169,7 @@ GameObject:
   - component: {fileID: 356194701111434195}
   - component: {fileID: 568858143352716224}
   - component: {fileID: 5344528852628031493}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Stap_Top
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,7 +238,7 @@ GameObject:
   - component: {fileID: 1245700812060983987}
   - component: {fileID: 343321071127195585}
   - component: {fileID: 5066484053688935249}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Stap_Bottom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +307,7 @@ GameObject:
   - component: {fileID: 6017103771361693686}
   - component: {fileID: 1887974161470846135}
   - component: {fileID: 7850083804220209796}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Stap_Back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -401,7 +376,7 @@ GameObject:
   - component: {fileID: 6869756932458139641}
   - component: {fileID: 5483940248059861180}
   - component: {fileID: 6797919758292718511}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Stap_Font
   m_TagString: Untagged
   m_Icon: {fileID: 0}

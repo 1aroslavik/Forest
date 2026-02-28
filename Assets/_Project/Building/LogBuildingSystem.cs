@@ -12,7 +12,7 @@ public class LogBuildingSystem : MonoBehaviour
     public float pickupDistance = 3f;
 
     [Header("Placement")]
-    public LayerMask placementMask; // только Ground
+    public LayerMask placementMask; // Ground + BuiltLog
     public float placementDistance = 5f;
     public float scrollRotationSpeed = 180f;
 
@@ -25,6 +25,17 @@ public class LogBuildingSystem : MonoBehaviour
     private float currentRotationY = 0f;
     private Vector3 lastValidPosition;
     private bool canPlace = false;
+
+    private float logHeight;
+    private float logLength;
+
+    void Start()
+    {
+        // Точный размер через BoxCollider
+        BoxCollider box = logPrefab.GetComponent<BoxCollider>();
+        logHeight = box.size.y * logPrefab.transform.localScale.y;
+        logLength = box.size.z * logPrefab.transform.localScale.z;
+    }
 
     void Update()
     {
@@ -108,30 +119,31 @@ public class LogBuildingSystem : MonoBehaviour
             return;
         }
 
-        // Получаем половину толщины бревна
-        Collider prefabCol = logPrefab.GetComponent<Collider>();
-        float halfHeight = prefabCol.bounds.extents.y;
+        BoxCollider box = logPrefab.GetComponent<BoxCollider>();
+        float height = box.size.y * logPrefab.transform.localScale.y;
+        float halfHeight = height / 2f;
 
-        // 🔥 КЛЮЧЕВОЕ — смещение по нормали поверхности
-        lastValidPosition = hit.point + hit.normal * halfHeight;
-
-        canPlace = true;
-
-        if (verticalMode)
+        if (hit.collider.gameObject.layer == LayerMask.NameToLayer("BuiltLog"))
         {
-            DrawCircle(lastValidPosition, 0.15f);
+            // 🔥 Берём РЕАЛЬНУЮ верхнюю точку коллайдера
+            float topY = hit.collider.bounds.max.y;
+            lastValidPosition = new Vector3(
+                hit.point.x,
+                topY + halfHeight,
+                hit.point.z
+            );
         }
         else
         {
-            float length = 2f;
-
-            Vector3 dir = Quaternion.Euler(0, currentRotationY, 0) * Vector3.forward;
-
-            Vector3 start = lastValidPosition - dir * (length / 2f);
-            Vector3 end = lastValidPosition + dir * (length / 2f);
-
-            DrawLine(start, end);
+            // На землю
+            lastValidPosition = new Vector3(
+                hit.point.x,
+                hit.point.y + halfHeight,
+                hit.point.z
+            );
         }
+
+        canPlace = true;
     }
 
     void HandleScrollRotation()
