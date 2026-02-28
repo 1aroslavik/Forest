@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 4632031846521638}
   - component: {fileID: 95978546307975870}
   - component: {fileID: -3190368670491925134}
+  - component: {fileID: -2698046085254860086}
   m_Layer: 0
   m_Name: Wild_rabbit_v2_prefab
   m_TagString: Untagged
@@ -111,6 +112,25 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-2698046085254860086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038650439005304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7c8c8a923649d2ae4cb374c0d9a13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimalAI
+  animalType: 0
+  player: {fileID: 0}
+  detectionRadius: 7
+  wanderRadius: 10
+  walkTime: 5
+  idleTime: 3
+  eatTime: 4
 --- !u!1 &1052421133370920
 GameObject:
   m_ObjectHideFlags: 0

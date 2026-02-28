@@ -1619,6 +1619,7 @@ GameObject:
   - component: {fileID: 4986369373079532}
   - component: {fileID: 95683085403112894}
   - component: {fileID: 5996778439565547676}
+  - component: {fileID: 1106260856310548674}
   m_Layer: 0
   m_Name: Chicken_v2_prefab
   m_TagString: Untagged
@@ -1687,6 +1688,25 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1106260856310548674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1965389907394784}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7c8c8a923649d2ae4cb374c0d9a13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimalAI
+  animalType: 0
+  player: {fileID: 0}
+  detectionRadius: 7
+  wanderRadius: 10
+  walkTime: 5
+  idleTime: 3
+  eatTime: 4
 --- !u!1 &1966172186850820
 GameObject:
   m_ObjectHideFlags: 0

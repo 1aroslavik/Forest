@@ -1530,6 +1530,7 @@ GameObject:
   - component: {fileID: 4913353921665142}
   - component: {fileID: 95109918701140282}
   - component: {fileID: -4456992928768752197}
+  - component: {fileID: 8125471638366621581}
   m_Layer: 0
   m_Name: Wolf_prefab
   m_TagString: Untagged
@@ -1587,9 +1588,9 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.5
   m_Speed: 3.5
-  m_Acceleration: 8
+  m_Acceleration: 6
   avoidancePriority: 50
-  m_AngularSpeed: 120
+  m_AngularSpeed: 110
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
@@ -1598,6 +1599,25 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &8125471638366621581
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1817446995028838}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f7c8c8a923649d2ae4cb374c0d9a13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimalAI
+  animalType: 1
+  player: {fileID: 0}
+  detectionRadius: 6.17
+  wanderRadius: 10
+  walkTime: 5
+  idleTime: 3
+  eatTime: 4
 --- !u!1 &1852420776143842
 GameObject:
   m_ObjectHideFlags: 0
