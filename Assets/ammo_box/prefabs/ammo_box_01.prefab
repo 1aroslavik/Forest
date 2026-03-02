@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1302508651245583493}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Point2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -130,7 +130,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1015935746452711679}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Point3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -374,8 +374,13 @@ MonoBehaviour:
   lid: {fileID: 5293545180371706321}
   openAngle: -110
   speed: 4
-  possibleItems: []
-  spawnPoints: []
+  possibleItems:
+  - {fileID: 1896720402374228, guid: 1d64973c6237a9f4c9fa5fdfcb04dd16, type: 3}
+  spawnPoints:
+  - {fileID: 2768766328184254528}
+  - {fileID: 1302508651245583493}
+  - {fileID: 1015935746452711679}
+  openHint: {fileID: 0}
 --- !u!1 &5053501451586448428
 GameObject:
   m_ObjectHideFlags: 0
@@ -419,7 +424,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2768766328184254528}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Point1
   m_TagString: Untagged
   m_Icon: {fileID: 0}

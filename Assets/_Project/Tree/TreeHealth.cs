@@ -18,6 +18,9 @@ public class TreeHealth : MonoBehaviour
     public float fallForce = 6f;
     public float torqueForce = 8f;
 
+    [Header("Fixed Hit Point")]
+    public Transform hitPoint; // 🔥 фиксированная точка удара
+
     bool fallen = false;
     bool hasBroken = false;
 
@@ -37,8 +40,6 @@ public class TreeHealth : MonoBehaviour
 
         fallingRb.isKinematic = true;
         fallingRb.useGravity = true;
-
-        // 🔥 снимаем все блокировки вращения
         fallingRb.constraints = RigidbodyConstraints.None;
     }
 
@@ -49,24 +50,29 @@ public class TreeHealth : MonoBehaviour
         currentHealth--;
         Debug.Log("TREE HIT | HP = " + currentHealth);
 
-        MakeHole(hitterPosition);
+        // 🔥 используем фиксированную точку
+        Vector3 fixedPoint = hitPoint != null
+            ? hitPoint.position
+            : transform.position;
+
+        MakeHole(fixedPoint);
 
         if (currentHealth <= 0)
-            Fall(hitterPosition);
+            Fall(hitterPosition, fixedPoint);
     }
 
-    void Fall(Vector3 hitterPosition)
+    void Fall(Vector3 hitterPosition, Vector3 forcePoint)
     {
         if (fallingRb == null) return;
 
         fallen = true;
 
-        StartCoroutine(FallNextFixedUpdate(hitterPosition));
+        StartCoroutine(FallNextFixedUpdate(hitterPosition, forcePoint));
     }
 
-    System.Collections.IEnumerator FallNextFixedUpdate(Vector3 hitterPosition)
+    System.Collections.IEnumerator FallNextFixedUpdate(Vector3 hitterPosition, Vector3 forcePoint)
     {
-        yield return new WaitForFixedUpdate(); // ждём физический шаг
+        yield return new WaitForFixedUpdate();
 
         fallingRb.isKinematic = false;
 
@@ -74,12 +80,19 @@ public class TreeHealth : MonoBehaviour
         dir.y = 0f;
         dir.Normalize();
 
-        fallingRb.AddForce(dir * fallForce, ForceMode.Impulse);
+        // 🔥 сила прикладывается в фиксированной точке
+        fallingRb.AddForceAtPosition(
+            dir * fallForce,
+            forcePoint,
+            ForceMode.Impulse
+        );
+
         fallingRb.AddTorque(
             Vector3.Cross(Vector3.up, dir) * torqueForce,
             ForceMode.Impulse
         );
     }
+
     void OnCollisionEnter(Collision collision)
     {
         if (!fallen || hasBroken) return;
@@ -87,7 +100,6 @@ public class TreeHealth : MonoBehaviour
         if (!collision.gameObject.CompareTag("Ground"))
             return;
 
-        // Проверяем силу удара
         if (collision.relativeVelocity.magnitude > 3f)
         {
             hasBroken = true;

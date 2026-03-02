@@ -17,7 +17,7 @@ public class AxeHit : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, hitDistance))
         {
-            // 1️⃣ обычное дерево (prefab)
+            // 1️⃣ Prefab дерево
             TreeHealth tree = hit.collider.GetComponentInParent<TreeHealth>();
             if (tree != null)
             {
@@ -26,11 +26,9 @@ public class AxeHit : MonoBehaviour
                 return;
             }
 
-            // 2️⃣ terrain-дерево
+            // 2️⃣ Terrain дерево
             if (hit.collider is TerrainCollider)
             {
-                Debug.Log("HIT TERRAIN");
-
                 GameObject spawnedTree =
                     terrainChopper.TryChopAndSpawn(hit.point);
 
