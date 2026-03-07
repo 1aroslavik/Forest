@@ -5,6 +5,7 @@ public class LogPickup : MonoBehaviour
     public float pickupDistance = 3f;
     public Transform holdPoint;
     public Animator animator;
+
     private GameObject worldLog;
     private GameObject carriedLog;
 
@@ -13,20 +14,14 @@ public class LogPickup : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             if (carriedLog == null)
+            {
                 TryPickup();
+            }
             else
-                DropLog();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            animator.SetBool("isHolding", true);
-            Debug.Log("Holding ON");
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            animator.SetBool("isHolding", false);
-            Debug.Log("Holding OFF");
+            {
+                if (!TryAddToConstruction())
+                    DropLog();
+            }
         }
     }
 
@@ -39,38 +34,78 @@ public class LogPickup : MonoBehaviour
         {
             if (hit.collider.CompareTag("Log"))
             {
+                // не даём подбирать строительные брёвна
+                if (hit.collider.GetComponentInParent<ConstructionSite>() != null)
+                    return;
+
                 worldLog = hit.collider.gameObject;
 
-                // 1️⃣ создаём копию ДО выключения
                 carriedLog = Instantiate(worldLog, holdPoint.position, holdPoint.rotation);
                 carriedLog.transform.SetParent(holdPoint);
                 carriedLog.transform.localPosition = Vector3.zero;
                 carriedLog.transform.localRotation = Quaternion.identity;
 
-                // 2️⃣ удаляем физику у копии
+                // удаляем физику у копии
                 if (carriedLog.TryGetComponent(out Rigidbody rb))
                     Destroy(rb);
 
                 if (carriedLog.TryGetComponent(out Collider col))
                     Destroy(col);
 
-                // 3️⃣ теперь выключаем оригинал
                 worldLog.SetActive(false);
 
                 animator.SetBool("isHolding", true);
             }
         }
     }
+
+    bool TryAddToConstruction()
+    {
+        Ray ray = new Ray(Camera.main.transform.position,
+                          Camera.main.transform.forward);
+
+        LayerMask constructionLayer = LayerMask.GetMask("Construction");
+
+        if (Physics.Raycast(ray, out RaycastHit hit, pickupDistance, constructionLayer))
+        {
+            ConstructionSite site =
+                hit.collider.GetComponentInParent<ConstructionSite>();
+
+            if (site != null)
+            {
+                bool added = site.AddLog();
+
+                if (added)
+                {
+                    Destroy(carriedLog);
+                    carriedLog = null;
+
+                    if (worldLog != null)
+                        Destroy(worldLog);
+
+                    worldLog = null;
+
+                    animator.SetBool("isHolding", false);
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     void DropLog()
     {
-        // удаляем визуальную копию
         Destroy(carriedLog);
 
-        // возвращаем оригинал в мир
-        worldLog.transform.position =
-            holdPoint.position + transform.forward * 1f;
+        if (worldLog != null)
+        {
+            worldLog.transform.position =
+                holdPoint.position + transform.forward * 1f;
 
-        worldLog.SetActive(true);
+            worldLog.SetActive(true);
+        }
 
         animator.SetBool("isHolding", false);
 
