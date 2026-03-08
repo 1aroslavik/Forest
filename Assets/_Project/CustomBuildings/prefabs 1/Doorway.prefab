@@ -62,7 +62,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8394823875935276224}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -199,7 +199,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6382384333367503205}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -344,7 +344,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5854429237283492243}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -375,7 +375,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 105708677805869959}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -410,7 +410,7 @@ GameObject:
   - component: {fileID: 2664643062961152044}
   - component: {fileID: 1489431101140167753}
   - component: {fileID: 8284548218463188647}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Doorway
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -538,7 +538,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5188286298124433301}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -675,7 +675,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3288869891052662023}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -800,7 +800,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8453207621846871785}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -884,7 +884,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1536664578627350468}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -915,7 +915,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 259560481589459869}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot3
   m_TagString: Untagged
   m_Icon: {fileID: 0}

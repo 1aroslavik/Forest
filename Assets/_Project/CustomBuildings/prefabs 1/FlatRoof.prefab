@@ -62,7 +62,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1543574147322312794}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -146,7 +146,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6213603581552327242}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7110997512149536388}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -208,7 +208,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5865269502537475008}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +292,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4873655175536684585}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,7 +376,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 319059853532450147}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -560,7 +560,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8408878853234386116}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -644,7 +644,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1646302131416509557}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -675,7 +675,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7138414466689531894}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -763,7 +763,7 @@ GameObject:
   - component: {fileID: 5269496701467373252}
   - component: {fileID: 2521124361113503443}
   - component: {fileID: -5304388361880135971}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: FlatRoof
   m_TagString: Untagged
   m_Icon: {fileID: 0}

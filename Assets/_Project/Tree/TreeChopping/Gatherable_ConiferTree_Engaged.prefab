@@ -1141,6 +1141,6 @@ MonoBehaviour:
   - {fileID: 1385817787770731120}
   logPrefab: {fileID: 421135329707430855, guid: 597325a94f6b4a04e982715bb4e5e43b, type: 3}
   logsCount: 4
-  fallForce: 6
+  fallForce: 10
   torqueForce: 8
   hitPoint: {fileID: 0}

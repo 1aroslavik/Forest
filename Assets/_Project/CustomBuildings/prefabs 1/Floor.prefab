@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3327520615022203654}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7455172216111443296}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 595192544661204594}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9143054758445972724}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -292,7 +292,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8990647875194021745}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot8
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -323,7 +323,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5923698457973977822}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot7
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -407,7 +407,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7271504807255011612}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slots
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -446,7 +446,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4481545264146051651}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot6
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -477,7 +477,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4835294947521121737}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Slot4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -710,7 +710,7 @@ GameObject:
   - component: {fileID: 5722299389437405061}
   - component: {fileID: -9084443233123916602}
   - component: {fileID: 7216932885059428422}
-  m_Layer: 18
+  m_Layer: 17
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}

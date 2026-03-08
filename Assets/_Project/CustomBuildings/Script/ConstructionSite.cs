@@ -24,6 +24,8 @@ public class ConstructionSite : MonoBehaviour
 
     public bool AddLog()
     {
+        Debug.Log("AddLog called");
+
         if (currentLogs >= data.requiredLogs)
             return false;
 
