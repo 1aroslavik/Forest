@@ -1,218 +1,242 @@
-﻿// Tree Replacer created by Seta
-// https://www.youtube.com/@SetaLevelDesign
-// Licence: Creative Commons
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TreeReplacer : MonoBehaviour
 {
     [Header("References")]
-    public Terrain terrain; //reference to the terrain
-    public Camera playerCamera; //reference to the player camera
+    public Terrain terrain;
+    public Camera playerCamera;
 
     [Header("Interaction")]
-    public KeyCode replaceKey = KeyCode.G; //key used to trigger tree replacement
-    public float interactionDistance = 1f; //max distance the raycast can check for trees
-    public float radiusFromHitPoint = 3f; // radius for search tree pivot
+    public float replaceDistance = 15f;
 
     [Header("Performance")]
-    public float cellSize = 10f; //size of grid cells
-    public float despawnDistance = 50f; //distance at which replaced trees despawn
+    public float cellSize = 10f;
+    public float despawnDistance = 60f;
 
     [Header("PlayMode Options")]
-    public bool restoreTrees = true; //option to restore trees when exiting Play Mode
+    public bool restoreTrees = true;
 
     [System.Serializable]
     public class TreeReplacement
     {
-        public string treeName; //name of the tree prefab in the terrain
-        public GameObject replacementPrefab; //prefab that will replace this tree
+        public string treeName;
+        public GameObject replacementPrefab;
     }
 
     [Header("Replacements")]
-    public TreeReplacement[] replacements; //array of tree replacements defined in the inspector
+    public TreeReplacement[] replacements;
 
-    private TerrainData tData; //reference to terrain data (tree instances, heightmap)
-    private Dictionary<string, GameObject> replacementDict; //maps tree names to replacement prefabs
-    private Dictionary<Vector3Int, List<TreeRef>> treeGrid; //grid of trees for efficient lookup
-    private readonly List<TreeRef> activeSpawned = new List<TreeRef>(); //list of currently spawned replacements
-    private const float POS_EPS = 0.01f; //position epsilon for comparing trees
+    private TerrainData tData;
+    private Dictionary<string, GameObject> replacementDict;
+    private Dictionary<Vector3Int, List<TreeRef>> treeGrid;
+
+    private readonly List<TreeRef> activeSpawned = new List<TreeRef>();
 
     public class TreeRef
     {
-        public TreeInstance original; //original tree instance data
-        public Vector3 worldPos; //world position of the tree
-        public bool isReplaced; //whether the tree has been replaced
-        public GameObject spawnedGO; //reference to the spawned replacement prefab
+        public TreeInstance original;
+        public Vector3 worldPos;
+        public bool isReplaced;
+        public GameObject spawnedGO;
     }
 
     void Start()
     {
-        if (terrain == null || terrain.terrainData == null) //check if terrain and data exist
+        if (terrain == null || terrain.terrainData == null)
         {
-            enabled = false; //disable script if not valid
+            enabled = false;
             return;
         }
 
-        tData = terrain.terrainData; //get terrain data reference
+        tData = terrain.terrainData;
 
-        if (restoreTrees) //use if restore option is enabled
+        if (restoreTrees)
         {
-            tData = Instantiate(terrain.terrainData); //clone terrain data
-            terrain.terrainData = tData; //assign cloned data to terrain
+            tData = Instantiate(terrain.terrainData);
+            terrain.terrainData = tData;
         }
 
-        replacementDict = new Dictionary<string, GameObject>(); //initialize replacement dictionary
-        foreach (var r in replacements) //loop through defined replacements
+        replacementDict = new Dictionary<string, GameObject>();
+
+        foreach (var r in replacements)
         {
-            if (!replacementDict.ContainsKey(r.treeName) && r.replacementPrefab != null) //avoid duplicates
-                replacementDict.Add(r.treeName, r.replacementPrefab); //add mapping
+            if (!replacementDict.ContainsKey(r.treeName) && r.replacementPrefab != null)
+                replacementDict.Add(r.treeName, r.replacementPrefab);
         }
-        BuildTreeGrid(); //build the tree grid
+
+        BuildTreeGrid();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(replaceKey)) //if replacement key is pressed
-        {
-            TryReplaceTree(); //attempt to replace a tree
-        }
-        CheckForDespawn(); //check if any replaced trees should be despawned
+        AutoReplaceNearbyTrees();
+        CheckForDespawn();
     }
 
     private void BuildTreeGrid()
     {
-        treeGrid = new Dictionary<Vector3Int, List<TreeRef>>(); //initialize tree grid
-        var trees = tData.treeInstances; //get all tree instances from terrain
+        treeGrid = new Dictionary<Vector3Int, List<TreeRef>>();
 
-        for (int i = 0; i < trees.Length; i++) //loop through all trees
+        var trees = tData.treeInstances;
+
+        for (int i = 0; i < trees.Length; i++)
         {
-            var tr = new TreeRef //create new tree reference
+            var tr = new TreeRef
             {
-                original = trees[i], //save original instance
-                worldPos = NormalizedToWorld(trees[i].position), //convert normalized pos to world pos
-                isReplaced = false, //initially not replaced
-                spawnedGO = null //no prefab spawned yet
+                original = trees[i],
+                worldPos = NormalizedToWorld(trees[i].position),
+                isReplaced = false,
+                spawnedGO = null
             };
 
-            Vector3Int cell = WorldToCell(tr.worldPos); //determine which grid cell this tree belongs to
-            if (!treeGrid.TryGetValue(cell, out var list)) //check if cell exists in dictionary
+            Vector3Int cell = WorldToCell(tr.worldPos);
+
+            if (!treeGrid.TryGetValue(cell, out var list))
             {
-                list = new List<TreeRef>(); //create new list if cell does not exist
-                treeGrid[cell] = list; //add it to the dictionary
+                list = new List<TreeRef>();
+                treeGrid[cell] = list;
             }
-            list.Add(tr); //add tree to its cell list
+
+            list.Add(tr);
         }
     }
 
-    private Vector3 NormalizedToWorld(Vector3 normalizedPos) => Vector3.Scale(normalizedPos, tData.size) + terrain.transform.position; //convert normalized tree position to world position
-
-    private Vector3Int WorldToCell(Vector3 pos) => new Vector3Int(Mathf.FloorToInt(pos.x / cellSize), 0, Mathf.FloorToInt(pos.z / cellSize)); //convert world pos to grid cell index
-
-    private void TryReplaceTree()
+    private Vector3 NormalizedToWorld(Vector3 normalizedPos)
     {
-        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward); //create a ray starting from the player camera position pointing forward
-
-        if (!Physics.Raycast(ray, out RaycastHit hit, interactionDistance)) return; //cast the ray into the world up to "interactionDistance", stop if nothing was hit
-
-        var target = FindNearestTree(hit.point, radiusFromHitPoint); //find the nearest tree around the hit point within the radiusFromHitPoint value
-        if (target == null) return; //stop if no tree found
-
-        string treeName = tData.treePrototypes[target.original.prototypeIndex].prefab.name; //get the tree prototype name
-        if (!replacementDict.TryGetValue(treeName, out var prefab) || prefab == null) return; //check if there is a replacement prefab defined for this tree type on list
-
-        ReplaceTreeWithPrefab(target, prefab); //replace tree with the replacement prefab
+        return Vector3.Scale(normalizedPos, tData.size) + terrain.transform.position;
     }
-    private TreeRef FindNearestTree(Vector3 point, float maxDistance)
-    {
-        TreeRef closest = null; //this will hold the closest tree found
-        float minDist = maxDistance; //start with the maximum allowed distance
 
-        Vector3Int centerCell = WorldToCell(point);  //convert the hit point into grid cell coordinates
-        for (int x = -1; x <= 1; x++) //search in the center cell and in surrounding cells
+    private Vector3Int WorldToCell(Vector3 pos)
+    {
+        return new Vector3Int(
+            Mathf.FloorToInt(pos.x / cellSize),
+            0,
+            Mathf.FloorToInt(pos.z / cellSize)
+        );
+    }
+
+    void AutoReplaceNearbyTrees()
+    {
+        Vector3 playerPos = playerCamera.transform.position;
+
+        Vector3Int centerCell = WorldToCell(playerPos);
+
+        for (int x = -1; x <= 1; x++)
         {
             for (int z = -1; z <= 1; z++)
             {
-                Vector3Int cell = new Vector3Int(centerCell.x + x, 0, centerCell.z + z); //get the current cell to check
-                if (!treeGrid.TryGetValue(cell, out var list)) continue; //skip if the cell does not exist
+                Vector3Int cell = new Vector3Int(centerCell.x + x, 0, centerCell.z + z);
 
-                foreach (var tr in list) //loop through all trees in this cell
+                if (!treeGrid.TryGetValue(cell, out var list))
+                    continue;
+
+                foreach (var tr in list)
                 {
-                    if (tr.isReplaced) continue;//skip if this tree has already been replaced
+                    if (tr.isReplaced)
+                        continue;
 
-                    float dist = Vector2.Distance(new Vector2(point.x, point.z), new Vector2(tr.worldPos.x, tr.worldPos.z)); //calculate horizontal distance from point to tree pivot
+                    float dist = Vector3.Distance(playerPos, tr.worldPos);
 
-                    if (dist < minDist) //save it if this tree is closer than any previously found
+                    if (dist < replaceDistance)
                     {
-                        minDist = dist;
-                        closest = tr;
+                        string treeName =
+                            tData.treePrototypes[tr.original.prototypeIndex].prefab.name;
+
+                        if (replacementDict.TryGetValue(treeName, out var prefab))
+                        {
+                            ReplaceTreeWithPrefab(tr, prefab);
+                        }
                     }
                 }
             }
         }
-
-        return closest; //return the closest tree found
     }
-
 
     private void ReplaceTreeWithPrefab(TreeRef tr, GameObject prefab)
     {
-        if (tr.isReplaced) return; //skip if already replaced
+        if (tr.isReplaced)
+            return;
 
-        if (!RemoveTreeInstanceFromTerrain(tr.original)) //try removing from terrain
-            return; //if failed, exit
+        if (!RemoveTreeInstanceFromTerrain(tr))
+            return;
 
-        Quaternion rot = Quaternion.Euler(0f, tr.original.rotation * Mathf.Rad2Deg, 0f); //convert terrain rotation to Quaternion
-        Vector3 scale = new Vector3(tr.original.widthScale, tr.original.heightScale, tr.original.widthScale); //get tree scaling
+        Quaternion rot = Quaternion.Euler(
+            0f,
+            tr.original.rotation * Mathf.Rad2Deg,
+            0f
+        );
 
-        tr.isReplaced = true; //mark as replaced
-        GameObject obj = Instantiate(prefab, tr.worldPos, rot); //spawn replacement prefab
-        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, scale); // apply terrain scaling to prefab
-        tr.spawnedGO = obj; //save reference to spawned prefab
-        activeSpawned.Add(tr); //add to active list
+        Vector3 scale = new Vector3(
+            tr.original.widthScale,
+            tr.original.heightScale,
+            tr.original.widthScale
+        );
+
+        tr.isReplaced = true;
+
+        GameObject obj = Instantiate(prefab, tr.worldPos, rot);
+
+        obj.transform.localScale = Vector3.Scale(obj.transform.localScale, scale);
+
+        tr.spawnedGO = obj;
+
+        activeSpawned.Add(tr);
     }
 
-    private bool RemoveTreeInstanceFromTerrain(TreeInstance target)
+    private bool RemoveTreeInstanceFromTerrain(TreeRef tr)
     {
-        var src = tData.treeInstances; //get all current tree instances
-        var list = new List<TreeInstance>(src.Length - 1); //create a new list with reduced size
-        bool removed = false; //track if removal happened
+        var trees = new List<TreeInstance>(tData.treeInstances);
 
-        foreach (var t in src) //loop through all trees
+        for (int i = 0; i < trees.Count; i++)
         {
-            if (!removed && SameTree(t, target)) { removed = true; continue; } //skip target tree once
-            list.Add(t); //add all others
+            Vector3 world = NormalizedToWorld(trees[i].position);
+
+            float dist = Vector3.Distance(world, tr.worldPos);
+
+            if (dist < 1.5f)
+            {
+                trees.RemoveAt(i);
+                tData.treeInstances = trees.ToArray();
+                terrain.Flush();
+                return true;
+            }
         }
 
-        if (removed)
-            tData.treeInstances = list.ToArray(); //update terrain data with new tree list
-
-        return removed; //return true if tree was removed
-    }
-
-    private bool SameTree(TreeInstance a, TreeInstance b)
-    {
-        if (a.prototypeIndex != b.prototypeIndex) return false; //different type of tree
-        return (a.position - b.position).sqrMagnitude <= POS_EPS * POS_EPS; //check position difference within epsilon
+        return false;
     }
 
     private void CheckForDespawn()
     {
-        for (int i = activeSpawned.Count - 1; i >= 0; i--) //loop backwards through active replacements
+        for (int i = activeSpawned.Count - 1; i >= 0; i--)
         {
-            var tr = activeSpawned[i]; //get tree reference
-            if (!tr.isReplaced || tr.spawnedGO == null) { activeSpawned.RemoveAt(i); continue; } //skip invalid entries
+            var tr = activeSpawned[i];
 
-            float d = Vector3.Distance(playerCamera.transform.position, tr.worldPos); //distance to player
-            if (d > despawnDistance) //if too far away
+            if (!tr.isReplaced || tr.spawnedGO == null)
             {
-                Destroy(tr.spawnedGO); //destroy prefab
-                tr.spawnedGO = null; //clear reference
-                tr.isReplaced = false; //mark as not replaced
-                var list = new List<TreeInstance>(tData.treeInstances) { tr.original }; //add tree back to terrain
-                tData.treeInstances = list.ToArray(); //update terrain data
-                activeSpawned.RemoveAt(i); //remove from active list
+                activeSpawned.RemoveAt(i);
+                continue;
+            }
+
+            float d = Vector3.Distance(playerCamera.transform.position, tr.worldPos);
+
+            if (d > despawnDistance)
+            {
+                Destroy(tr.spawnedGO);
+
+                tr.spawnedGO = null;
+                tr.isReplaced = false;
+
+                var list = new List<TreeInstance>(tData.treeInstances)
+                {
+                    tr.original
+                };
+
+                tData.treeInstances = list.ToArray();
+
+                activeSpawned.RemoveAt(i);
             }
         }
     }
 }
+
