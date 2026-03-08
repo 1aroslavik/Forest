@@ -491,6 +491,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4272999395433942}
   - component: {fileID: 137769314954099230}
+  - component: {fileID: 2311221386081163498}
+  - component: {fileID: 1074171267005753290}
   m_Layer: 0
   m_Name: brown_bea4
   m_TagString: Untagged
@@ -614,6 +616,44 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.000000029802322, y: 0.81603044, z: 0.28141683}
     m_Extent: {x: 0.39507928, y: 0.85849684, z: 1.2552989}
   m_DirtyAABB: 0
+--- !u!95 &2311221386081163498
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242079827694590}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: cde4c2e452083e041923ea9d397cff9a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!111 &1074171267005753290
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1242079827694590}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &1263464723080334
 GameObject:
   m_ObjectHideFlags: 0

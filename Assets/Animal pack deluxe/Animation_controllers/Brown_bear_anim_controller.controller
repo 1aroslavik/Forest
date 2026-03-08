@@ -353,8 +353,8 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
-  - {fileID: 1101940496364903892}
   - {fileID: 1101580147613411956}
+  - {fileID: 1101940496364903892}
   - {fileID: 1101336077533935418}
   - {fileID: 1101128233459581216}
   - {fileID: 1101010601885081890}
