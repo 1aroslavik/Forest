@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1290606059921127774}
   - component: {fileID: 6910081003474841527}
   - component: {fileID: 3489847923621143864}
+  - component: {fileID: -925634228877280140}
   m_Layer: 18
   m_Name: Stairs
   m_TagString: Untagged
@@ -113,3 +114,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -6330761591910224807, guid: 2d0257d3e47ed054abd0035ab42c4f00, type: 3}
+--- !u!114 &-925634228877280140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607409931038562042}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47fa6c315db2eba45a41dc64e9a0f2a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingDisassemble
+  buildingData: {fileID: 11400000, guid: 0b647d056640c00429a57f9c823ce840, type: 2}
+  logPrefab: {fileID: 421135329707430855, guid: 597325a94f6b4a04e982715bb4e5e43b, type: 3}
+  holdTime: 2

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6705626745671685810}
   - component: {fileID: 982892050521380482}
   - component: {fileID: -1601170427519667328}
+  - component: {fileID: -399318918692499004}
   m_Layer: 18
   m_Name: WallWithWindow
   m_TagString: Untagged
@@ -114,3 +115,18 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -4933599999605316731, guid: 39dd80430a4806c489c31db40c5412b3, type: 3}
+--- !u!114 &-399318918692499004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6787462284637791834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47fa6c315db2eba45a41dc64e9a0f2a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingDisassemble
+  buildingData: {fileID: 11400000, guid: e068043dd4c2b814e906ea8c38846057, type: 2}
+  logPrefab: {fileID: 421135329707430855, guid: 597325a94f6b4a04e982715bb4e5e43b, type: 3}
+  holdTime: 2

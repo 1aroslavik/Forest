@@ -881,3 +881,5 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 011f7f7c1e015f641994b6561023456d, type: 2}
   logSlotsParent: {fileID: 319059853532450147}
   buildLogPrefab: {fileID: 421135329707430855, guid: d7a5f2c3e858e274e9d93ba607b43112, type: 3}
+  logDropPrefab: {fileID: 421135329707430855, guid: 597325a94f6b4a04e982715bb4e5e43b, type: 3}
+  cancelHoldTime: 1.5

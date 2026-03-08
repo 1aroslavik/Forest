@@ -27,19 +27,14 @@ public class WaterDrinkDetector : MonoBehaviour
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, detectDistance, waterLayer))
+        if (Physics.Raycast(ray, out hit, detectDistance))
         {
-            IWaterSource water =
-                hit.collider.GetComponent<IWaterSource>() ??
-                hit.collider.GetComponentInParent<IWaterSource>();
-
-            if (water != null)
+            if (hit.collider.CompareTag("Water"))
             {
-                currentWater = water;
+                currentWater = hit.collider.GetComponent<IWaterSource>();
             }
         }
 
-        // Включаем hint только если реально смотрим на воду
         if (hint != null)
             hint.SetActive(currentWater != null);
     }

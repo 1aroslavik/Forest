@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6212164854562362422}
   - component: {fileID: 1011119597356706016}
   - component: {fileID: 5722299389437405061}
+  - component: {fileID: 4249989041704113709}
   m_Layer: 18
   m_Name: Floor
   m_TagString: Untagged
@@ -90,3 +91,18 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &4249989041704113709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8754072341095139419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47fa6c315db2eba45a41dc64e9a0f2a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BuildingDisassemble
+  buildingData: {fileID: 11400000, guid: 31bc1e1244f54b745b1db6f393f0f2b7, type: 2}
+  logPrefab: {fileID: 421135329707430855, guid: 597325a94f6b4a04e982715bb4e5e43b, type: 3}
+  holdTime: 2

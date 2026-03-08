@@ -2,6 +2,12 @@
 
 public class BuildingSystem : MonoBehaviour
 {
+    [Header("Preview Materials")]
+    public Material validMaterial;
+    public Material invalidMaterial;
+
+    bool canPlace = true;
+    Renderer[] previewRenderers;
     [Header("Buildings")]
     public BuildingData[] buildings;
 
@@ -24,6 +30,7 @@ public class BuildingSystem : MonoBehaviour
             CreatePreview();
 
         MovePreview();
+        CheckPlacement();
         HandleRotation();
 
         if (Input.GetMouseButtonDown(0))
@@ -56,14 +63,31 @@ public class BuildingSystem : MonoBehaviour
     {
         previewObject = Instantiate(currentBuilding.constructionPrefab);
 
-        // УБИРАЕМ ВСЮ ФИЗИКУ у preview
+        previewRenderers = previewObject.GetComponentsInChildren<Renderer>();
+
         foreach (Collider col in previewObject.GetComponentsInChildren<Collider>())
             Destroy(col);
 
         foreach (Rigidbody rb in previewObject.GetComponentsInChildren<Rigidbody>())
             Destroy(rb);
     }
+    void CheckPlacement()
+    {
+        int mask = LayerMask.GetMask("Default", "Building");
 
+        Collider[] hits = Physics.OverlapBox(
+            previewObject.transform.position,
+            previewObject.transform.localScale / 2f,
+            previewObject.transform.rotation,
+            mask);
+
+        canPlace = hits.Length == 0;
+
+        foreach (Renderer r in previewRenderers)
+        {
+            r.material = canPlace ? validMaterial : invalidMaterial;
+        }
+    }
     void MovePreview()
     {
         Ray ray = new Ray(
@@ -154,6 +178,9 @@ public class BuildingSystem : MonoBehaviour
 
     void Place()
     {
+        if (!canPlace)
+            return;
+
         Instantiate(currentBuilding.constructionPrefab,
             previewObject.transform.position,
             previewObject.transform.rotation);

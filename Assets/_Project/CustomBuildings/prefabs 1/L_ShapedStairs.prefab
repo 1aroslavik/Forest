@@ -735,6 +735,8 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: 71b6176493cb4ce449cab666a9c54164, type: 2}
   logSlotsParent: {fileID: 6302572200763813996}
   buildLogPrefab: {fileID: 421135329707430855, guid: d7a5f2c3e858e274e9d93ba607b43112, type: 3}
+  logDropPrefab: {fileID: 421135329707430855, guid: 597325a94f6b4a04e982715bb4e5e43b, type: 3}
+  cancelHoldTime: 1.5
 --- !u!64 &6405022961699451334
 MeshCollider:
   m_ObjectHideFlags: 0

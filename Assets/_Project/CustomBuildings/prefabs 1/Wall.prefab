@@ -461,6 +461,8 @@ MonoBehaviour:
   data: {fileID: 11400000, guid: cd884e8d22328954c9e706d276977b5c, type: 2}
   logSlotsParent: {fileID: 2188187819554319848}
   buildLogPrefab: {fileID: 421135329707430855, guid: d7a5f2c3e858e274e9d93ba607b43112, type: 3}
+  logDropPrefab: {fileID: 421135329707430855, guid: 597325a94f6b4a04e982715bb4e5e43b, type: 3}
+  cancelHoldTime: 1.5
 --- !u!1 &7009082505814766906
 GameObject:
   m_ObjectHideFlags: 0
