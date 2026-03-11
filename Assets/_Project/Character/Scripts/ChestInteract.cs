@@ -72,7 +72,7 @@ public class ChestInteract : MonoBehaviour
                 point.rotation);
 
             // выставляем слой всем детям
-            SetLayerRecursively(item, LayerMask.NameToLayer("Pickup"));
+            SetLayerRecursively(item, LayerMask.NameToLayer("PostProcessing"));
         }
     }
 
