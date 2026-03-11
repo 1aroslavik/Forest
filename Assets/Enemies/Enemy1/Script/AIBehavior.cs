@@ -12,12 +12,11 @@ public class EnemyAI : MonoBehaviour
     [Header("Detection")]
     public float detectionRadius = 6f;
     public float attackDistance = 2f;
-    public float losePlayerDistance = 25f;
+    public float losePlayerDistance = 15f;
 
     [Header("Patrol")]
     public Transform patrolCenter;
-    public float patrolRadius = 10f;
-    public float idleTime = 2f;
+    public float patrolRadius = 8f;
 
     [Header("Combat")]
     public float attackCooldown = 1.5f;
@@ -27,11 +26,10 @@ public class EnemyAI : MonoBehaviour
     public float aiUpdateRate = 0.2f;
     public float pathUpdateRate = 0.3f;
 
-    private float idleTimer;
-    private float attackTimer;
-    private float screamTimer;
     private float aiTimer;
     private float pathTimer;
+    private float attackTimer;
+    private float screamTimer;
 
     private bool hasScreamed = false;
     private bool isDead = false;
@@ -41,7 +39,6 @@ public class EnemyAI : MonoBehaviour
     private enum State
     {
         Patrol,
-        Idle,
         Scream,
         Chase,
         Attack
@@ -52,7 +49,10 @@ public class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
-        ChangeState(State.Patrol);
+        agent.stoppingDistance = 0.5f;
+
+        SetRandomDestination();
+        currentState = State.Patrol;
     }
 
     void Update()
@@ -60,7 +60,6 @@ public class EnemyAI : MonoBehaviour
         if (player == null || isDead) return;
 
         aiTimer -= Time.deltaTime;
-
         if (aiTimer > 0f) return;
 
         aiTimer = aiUpdateRate;
@@ -71,10 +70,6 @@ public class EnemyAI : MonoBehaviour
         {
             case State.Patrol:
                 PatrolUpdate(distance);
-                break;
-
-            case State.Idle:
-                IdleUpdate(distance);
                 break;
 
             case State.Scream:
@@ -91,56 +86,7 @@ public class EnemyAI : MonoBehaviour
         }
 
         float speed = agent.desiredVelocity.magnitude;
-animator.SetFloat("Speed", speed, 0.15f, Time.deltaTime);
-    }
-
-    void ChangeState(State newState)
-    {
-        if (currentState == newState) return;
-
-        currentState = newState;
-
-        switch (newState)
-        {
-            case State.Patrol:
-
-                agent.isStopped = false;
-                SetRandomDestination();
-
-                break;
-
-            case State.Idle:
-
-                agent.ResetPath();
-                agent.isStopped = true;
-                idleTimer = idleTime;
-
-                break;
-
-            case State.Scream:
-
-                agent.ResetPath();
-                agent.isStopped = true;
-
-                screamTimer = screamDuration;
-
-                animator.SetTrigger("Scream");
-
-                break;
-
-            case State.Chase:
-
-                agent.isStopped = false;
-
-                break;
-
-            case State.Attack:
-
-                agent.isStopped = true;
-                attackTimer = 0f;
-
-                break;
-        }
+        animator.SetFloat("Speed", speed, 0.15f, Time.deltaTime);
     }
 
     void PatrolUpdate(float distance)
@@ -159,33 +105,9 @@ animator.SetFloat("Speed", speed, 0.15f, Time.deltaTime);
             return;
         }
 
-        if (!agent.hasPath || agent.remainingDistance < 1f)
+        if (!agent.pathPending && agent.remainingDistance <= 0.8f)
         {
-            ChangeState(State.Idle);
-        }
-    }
-
-    void IdleUpdate(float distance)
-    {
-        if (distance < detectionRadius)
-        {
-            if (!hasScreamed)
-            {
-                hasScreamed = true;
-                ChangeState(State.Scream);
-            }
-            else
-            {
-                ChangeState(State.Chase);
-            }
-            return;
-        }
-
-        idleTimer -= aiUpdateRate;
-
-        if (idleTimer <= 0)
-        {
-            ChangeState(State.Patrol);
+            SetRandomDestination();
         }
     }
 
@@ -219,7 +141,6 @@ animator.SetFloat("Speed", speed, 0.15f, Time.deltaTime);
         if (pathTimer <= 0f)
         {
             pathTimer = pathUpdateRate;
-            agent.stoppingDistance = attackDistance;
             agent.SetDestination(player.position);
         }
     }
@@ -247,14 +168,40 @@ animator.SetFloat("Speed", speed, 0.15f, Time.deltaTime);
         }
     }
 
+    void ChangeState(State newState)
+    {
+        currentState = newState;
+
+        switch (newState)
+        {
+            case State.Patrol:
+                agent.isStopped = false;
+                SetRandomDestination();
+                break;
+
+            case State.Scream:
+                agent.isStopped = true;
+                screamTimer = screamDuration;
+                animator.SetTrigger("Scream");
+                break;
+
+            case State.Chase:
+                agent.isStopped = false;
+                break;
+
+            case State.Attack:
+                agent.isStopped = true;
+                attackTimer = 0f;
+                break;
+        }
+    }
+
     void SetRandomDestination()
     {
-        Vector3 randomPoint = Random.insideUnitSphere * patrolRadius;
+        Vector3 center = patrolCenter != null ? patrolCenter.position : transform.position;
 
-        if (patrolCenter != null)
-            randomPoint += patrolCenter.position;
-        else
-            randomPoint += transform.position;
+        Vector3 randomPoint = Random.insideUnitSphere * patrolRadius;
+        randomPoint += center;
 
         if (NavMesh.SamplePosition(randomPoint, out NavMeshHit hit, patrolRadius, NavMesh.AllAreas))
         {
