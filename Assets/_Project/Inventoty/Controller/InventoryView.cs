@@ -6,30 +6,24 @@ public class InventoryView : MonoBehaviour
     public InventoryModel model;
     public List<Transform> slotPoints = new();
 
-    Dictionary<int, GameObject> visuals = new();
+    Dictionary<int, List<GameObject>> visuals = new();
 
     void Start()
     {
-        //for (int i = 0; i < slotPoints.Count; i++)
-        //{
-        //    var slotView = slotPoints[i].gameObject.AddComponent<InventorySlotView>();
-        //    slotView.slotIndex = i;
-        //    slotView.model = model;
-        //}
-
         Render();
     }
 
-
     public void Render()
     {
-        // очищаем старые визуалы
-        foreach (var v in visuals.Values)
-            Destroy(v);
+        // удаляем старые визуалы
+        foreach (var list in visuals.Values)
+        {
+            foreach (var obj in list)
+                Destroy(obj);
+        }
 
         visuals.Clear();
 
-        // для каждого слота модели
         for (int i = 0; i < model.slots.Count && i < slotPoints.Count; i++)
         {
             var slot = model.slots[i];
@@ -41,24 +35,45 @@ public class InventoryView : MonoBehaviour
                 continue;
             }
 
-            var obj = Instantiate(
-                slot.data.inventoryPrefab,
-                slotPoints[i].position,
-                slotPoints[i].rotation,
-                slotPoints[i]
-            );
-            var itemView = obj.GetComponent<InventoryItemsView>();
-            itemView.data = slot.data;
+            int visualCount = Mathf.Min(slot.amount, 5);
 
-            // небольшой SoTF-стиль
-            obj.transform.localPosition += Random.insideUnitSphere * 0.03f;
-            obj.transform.localRotation *= Quaternion.Euler(
-    0f,
-    Random.Range(0f, 360f),
-    0f
-);
+            visuals[i] = new List<GameObject>();
 
-            visuals[i] = obj;
+            float radius = 0.06f;
+
+            for (int j = 0; j < visualCount; j++)
+            {
+                var obj = Instantiate(
+                    slot.data.inventoryPrefab,
+                    slotPoints[i].position,
+                    slotPoints[i].rotation,
+                    slotPoints[i]
+                );
+
+                var itemView = obj.GetComponent<InventoryItemsView>();
+                itemView.data = slot.data;
+                itemView.slot = slot;
+
+                // размещение по кругу
+                float angle = j * Mathf.PI * 2f / visualCount;
+
+                Vector3 offset = new Vector3(
+                    Mathf.Cos(angle) * radius,
+                    0,
+                    Mathf.Sin(angle) * radius
+                );
+
+                obj.transform.localPosition += offset;
+
+                // случайный поворот
+                obj.transform.localRotation = Quaternion.Euler(
+                    Random.Range(-5f, 5f),
+                    Random.Range(0f, 360f),
+                    Random.Range(-5f, 5f)
+                );
+
+                visuals[i].Add(obj);
+            }
         }
     }
 }

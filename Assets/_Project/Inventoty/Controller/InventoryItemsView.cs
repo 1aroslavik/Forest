@@ -3,31 +3,32 @@ using UnityEngine;
 public class InventoryItemsView : MonoBehaviour
 {
     public ItemData data;
-    EquipSystem equipSystem;
+    public InventorySlotData slot;
 
-    [Header("Random Rotation")]
-    public bool randomizeRotation = true;
-    public float maxYRotation = 20f;
-    public float maxXRotation = 5f;
+    bool isHovering;
 
-    void Start()
+    void OnMouseEnter()
     {
-        equipSystem = FindObjectOfType<EquipSystem>();
+        isHovering = true;
 
-        if (randomizeRotation)
-        {
-            float randomY = Random.Range(-maxYRotation, maxYRotation);
-            float randomX = Random.Range(-maxXRotation, maxXRotation);
-
-            transform.localRotation = Quaternion.Euler(randomX, randomY, 0f);
-        }
+        if (InventoryTooltip.Instance != null)
+            InventoryTooltip.Instance.Show(slot);
     }
 
-    void OnMouseDown()
+    void OnMouseExit()
     {
-        if (equipSystem != null)
+        isHovering = false;
+
+        if (InventoryTooltip.Instance != null)
+            InventoryTooltip.Instance.Hide();
+    }
+
+    void Update()
+    {
+        if (isHovering && Input.GetKeyDown(KeyCode.E))
         {
-            equipSystem.Equip(data);
+            if (ItemUseSystem.Instance != null)
+                ItemUseSystem.Instance.UseItem(slot);
         }
     }
 }

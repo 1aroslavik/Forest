@@ -17,7 +17,8 @@ public class PlayerSwimmingSystem : MonoBehaviour
     private Rigidbody rb;
     private bool inWater = false;
     private int swimLayerIndex = 1;
-
+    [Header("Arms")]
+    public GameObject armsRoot;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -61,6 +62,8 @@ public class PlayerSwimmingSystem : MonoBehaviour
 
             animator.SetBool("InWater", true);
             animator.SetLayerWeight(swimLayerIndex, 1f);
+
+            if (armsRoot) armsRoot.SetActive(false);
         }
     }
 
@@ -76,6 +79,8 @@ public class PlayerSwimmingSystem : MonoBehaviour
             animator.SetBool("InWater", false);
             animator.SetBool("IsSwimming", false);
             animator.SetLayerWeight(swimLayerIndex, 0f);
+
+            if (armsRoot) armsRoot.SetActive(true);
         }
     }
 }
