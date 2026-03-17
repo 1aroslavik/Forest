@@ -21,22 +21,18 @@ public class ItemUseSystem : MonoBehaviour
         switch (item.itemType)
         {
             case ItemType.Food:
-
                 playerStats.Eat(item.hungerRestore);
                 break;
 
             case ItemType.Drink:
-
                 playerStats.Drink(item.thirstRestore);
                 break;
 
             case ItemType.Medicine:
-
                 playerStats.Heal(item.healthRestore);
                 break;
 
             case ItemType.Resource:
-
                 AddToCraft(slot);
                 return;
         }
@@ -59,6 +55,20 @@ public class ItemUseSystem : MonoBehaviour
 
     void AddToCraft(InventorySlotData slot)
     {
-        Debug.Log("Move to craft: " + slot.data.itemName);
+        if (CraftArea.Instance == null) return;
+
+        // добавляем предмет на коврик
+        CraftArea.Instance.AddItem(slot.data);
+
+        // уменьшаем количество в инвентаре
+        slot.amount--;
+
+        if (slot.amount <= 0)
+            slot.data = null;
+
+        if (InventoryTooltip.Instance != null)
+            InventoryTooltip.Instance.Hide();
+
+        FindObjectOfType<InventoryView>().Render();
     }
 }

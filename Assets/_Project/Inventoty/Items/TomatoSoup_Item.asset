@@ -10,10 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee068d734ff63ca49864da26bbe487bb, type: 3}
-  m_Name: Axe_Item
+  m_Name: TomatoSoup_Item
   m_EditorClassIdentifier: Assembly-CSharp::ItemData
-  itemName: Axe
-  isStackable: 0
-  maxStack: 1
-  inventoryPrefab: {fileID: 5369259645708115934, guid: 2e8172f19f089df40bbf77c7a027451a, type: 3}
-  handPrefab: {fileID: 5369259645708115934, guid: 8b9e92758f8a5034cb3ec811385d23a4, type: 3}
+  itemName: Tomato Soup
+  description: 
+  itemType: 1
+  isStackable: 1
+  maxStack: 5
+  hungerRestore: 40
+  thirstRestore: 20
+  healthRestore: 0
+  inventoryPrefab: {fileID: 2480711523850051260, guid: 565737c5334094c40896bf32b0f32424, type: 3}
+  handPrefab: {fileID: 0}

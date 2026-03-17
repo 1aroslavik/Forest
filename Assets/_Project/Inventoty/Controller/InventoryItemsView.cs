@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class InventoryItemsView : MonoBehaviour
 {
@@ -27,8 +27,24 @@ public class InventoryItemsView : MonoBehaviour
     {
         if (isHovering && Input.GetKeyDown(KeyCode.E))
         {
-            if (ItemUseSystem.Instance != null)
-                ItemUseSystem.Instance.UseItem(slot);
+            if (data == null) return;
+
+            // если оружие → экипировать
+            if (data.itemType == ItemType.Weapon)
+            {
+                WeaponEquipment equipment = FindFirstObjectByType<WeaponEquipment>();
+
+                if (equipment != null)
+                {
+                    equipment.Equip(data);
+                }
+            }
+            else
+            {
+                // обычное использование предмета
+                if (ItemUseSystem.Instance != null)
+                    ItemUseSystem.Instance.UseItem(slot);
+            }
         }
     }
 }

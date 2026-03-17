@@ -18,9 +18,7 @@ public class ItemData : ScriptableObject
 {
     [Header("Base")]
     public string itemName;
-
-    [TextArea]
-    public string description;
+    [TextArea] public string description;
 
     public ItemType itemType;
 
@@ -36,4 +34,7 @@ public class ItemData : ScriptableObject
     [Header("Visual")]
     public GameObject inventoryPrefab;
     public GameObject handPrefab;
+
+    [Header("Weapon")]
+    public RuntimeAnimatorController weaponAnimator;
 }
