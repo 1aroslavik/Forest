@@ -2322,7 +2322,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4c62d0272d104934919876103bb6cbd, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 190.76
+      value: 190.89
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: c4c62d0272d104934919876103bb6cbd, type: 3}
       propertyPath: m_LocalPosition.z
@@ -5459,13 +5459,15 @@ Animation:
   m_GameObject: {fileID: 1354731188}
   m_Enabled: 1
   serializedVersion: 4
-  m_Animation: {fileID: -203655887218126122, guid: 5d950f279b6c043499cc8d3610631204, type: 3}
+  m_Animation: {fileID: -203655887218126122, guid: 6e993ef5738a44d58be915b00ef91769, type: 3}
   m_Animations:
-  - {fileID: -203655887218126122, guid: c4c62d0272d104934919876103bb6cbd, type: 3}
+  - {fileID: -203655887218126122, guid: 638112ae5826e4593963ab857dfb2ec3, type: 3}
   - {fileID: -203655887218126122, guid: 1cfb6b73295a345e6be81f18c33f7659, type: 3}
+  - {fileID: -203655887218126122, guid: 9beb91005fca240fab918e254c1327ab, type: 3}
+  - {fileID: -203655887218126122, guid: d3bc95c0e6e314b06af7678693d8b766, type: 3}
   m_WrapMode: 0
   m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
+  m_AnimatePhysics: 1
   m_UpdateMode: 0
   m_CullingType: 0
 --- !u!95 &1354731191
@@ -5479,7 +5481,7 @@ Animator:
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: c4c62d0272d104934919876103bb6cbd, type: 3}
   m_Controller: {fileID: 9100000, guid: 15dee425de3df48dbb8b1ff0c7da2c57, type: 2}
-  m_CullingMode: 0
+  m_CullingMode: 1
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
