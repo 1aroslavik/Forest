@@ -2,9 +2,16 @@
 
 public class LogPickup : MonoBehaviour
 {
+    [Header("Pickup")]
     public float pickupDistance = 3f;
     public Transform holdPoint;
+
+    [Header("Animator")]
     public Animator animator;
+
+    [Header("Arms")]
+    public GameObject axeArms;
+    public GameObject carryArms;
 
     private GameObject worldLog;
     private GameObject carriedLog;
@@ -34,7 +41,6 @@ public class LogPickup : MonoBehaviour
         {
             if (hit.collider.CompareTag("Log"))
             {
-                // не даём подбирать строительные брёвна
                 if (hit.collider.GetComponentInParent<ConstructionSite>() != null)
                     return;
 
@@ -45,7 +51,6 @@ public class LogPickup : MonoBehaviour
                 carriedLog.transform.localPosition = Vector3.zero;
                 carriedLog.transform.localRotation = Quaternion.identity;
 
-                // удаляем физику у копии
                 if (carriedLog.TryGetComponent(out Rigidbody rb))
                     Destroy(rb);
 
@@ -54,7 +59,12 @@ public class LogPickup : MonoBehaviour
 
                 worldLog.SetActive(false);
 
+                // анимация
                 animator.SetBool("isHolding", true);
+
+                // переключаем руки
+                if (axeArms) axeArms.SetActive(false);
+                if (carryArms) carryArms.SetActive(true);
             }
         }
     }
@@ -87,6 +97,10 @@ public class LogPickup : MonoBehaviour
 
                     animator.SetBool("isHolding", false);
 
+                    // возвращаем руки
+                    if (axeArms) axeArms.SetActive(true);
+                    if (carryArms) carryArms.SetActive(false);
+
                     return true;
                 }
             }
@@ -108,6 +122,10 @@ public class LogPickup : MonoBehaviour
         }
 
         animator.SetBool("isHolding", false);
+
+        // возвращаем руки
+        if (axeArms) axeArms.SetActive(true);
+        if (carryArms) carryArms.SetActive(false);
 
         carriedLog = null;
         worldLog = null;
