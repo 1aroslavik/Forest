@@ -1528,7 +1528,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4913353921665142}
-  - component: {fileID: 95109918701140282}
   - component: {fileID: -4456992928768752197}
   - component: {fileID: 8125471638366621581}
   m_Layer: 0
@@ -1555,28 +1554,6 @@ Transform:
   - {fileID: 4035390921794344}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &95109918701140282
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1817446995028838}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: 5a65f3013be671d42b373a04733cc760, type: 3}
-  m_Controller: {fileID: 9100000, guid: a2f1fec9538c33449aa42f390ad43dc4, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!195 &-4456992928768752197
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -1615,7 +1592,6 @@ MonoBehaviour:
   player: {fileID: 0}
   detectionRadius: 6.17
   wanderRadius: 10
-  walkTime: 5
   idleTime: 3
   eatTime: 4
 --- !u!1 &1852420776143842
