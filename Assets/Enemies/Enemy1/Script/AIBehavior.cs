@@ -26,17 +26,17 @@ public class EnemyAI : MonoBehaviour
     public float aiUpdateRate = 0.2f;
     public float pathUpdateRate = 0.3f;
 
-    private float aiTimer;
-    private float pathTimer;
-    private float attackTimer;
-    private float screamTimer;
+    float aiTimer;
+    float pathTimer;
+    float attackTimer;
+    float screamTimer;
 
-    private bool hasScreamed = false;
-    private bool isDead = false;
+    bool hasScreamed = false;
+    bool isDead = false;
 
-    private State currentState;
+    State currentState;
 
-    private enum State
+    enum State
     {
         Patrol,
         Scream,
@@ -49,7 +49,7 @@ public class EnemyAI : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
 
-        agent.stoppingDistance = 0.5f;
+        agent.stoppingDistance = attackDistance;
 
         SetRandomDestination();
         currentState = State.Patrol;
@@ -58,6 +58,10 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
         if (player == null || isDead) return;
+
+        // АНИМАЦИЯ ОБНОВЛЯЕТСЯ КАЖДЫЙ КАДР
+        float speed = agent.velocity.magnitude;
+        animator.SetFloat("Speed", speed, 0.15f, Time.deltaTime);
 
         aiTimer -= Time.deltaTime;
         if (aiTimer > 0f) return;
@@ -84,9 +88,6 @@ public class EnemyAI : MonoBehaviour
                 AttackUpdate(distance);
                 break;
         }
-
-        float speed = agent.desiredVelocity.magnitude;
-        animator.SetFloat("Speed", speed, 0.15f, Time.deltaTime);
     }
 
     void PatrolUpdate(float distance)
@@ -105,7 +106,7 @@ public class EnemyAI : MonoBehaviour
             return;
         }
 
-        if (!agent.pathPending && agent.remainingDistance <= 0.8f)
+        if (!agent.pathPending && agent.remainingDistance < 1f)
         {
             SetRandomDestination();
         }
@@ -115,7 +116,7 @@ public class EnemyAI : MonoBehaviour
     {
         screamTimer -= aiUpdateRate;
 
-        if (screamTimer <= 0)
+        if (screamTimer <= 0f)
         {
             ChangeState(State.Chase);
         }
@@ -147,11 +148,11 @@ public class EnemyAI : MonoBehaviour
 
     void AttackUpdate(float distance)
     {
-        Vector3 lookPos = player.position - transform.position;
-        lookPos.y = 0;
+        Vector3 dir = player.position - transform.position;
+        dir.y = 0;
 
-        if (lookPos != Vector3.zero)
-            transform.rotation = Quaternion.LookRotation(lookPos);
+        if (dir != Vector3.zero)
+            transform.rotation = Quaternion.LookRotation(dir);
 
         attackTimer -= aiUpdateRate;
 
