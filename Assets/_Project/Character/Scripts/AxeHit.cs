@@ -4,15 +4,29 @@ public class AxeHit : MonoBehaviour
 {
     public float hitDistance = 2f;
     public Camera cam;
-    public KeyCode hitKey = KeyCode.Mouse0;
 
     [Header("Terrain Trees")]
     public TerrainTreeChopper terrainChopper;
 
+    bool canHit; // 🔥 управляется анимацией
+
+    void Start()
+    {
+        if (cam == null)
+            cam = Camera.main;
+    }
+
     void Update()
     {
-        if (!Input.GetKeyDown(hitKey)) return;
+        // просто проверяем кнопку
+        if (Input.GetMouseButtonDown(0))
+        {
+            TryHit();
+        }
+    }
 
+    void TryHit()
+    {
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
 
         if (Physics.Raycast(ray, out RaycastHit hit, hitDistance))

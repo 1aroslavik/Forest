@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BuildingSystem : MonoBehaviour
 {
@@ -6,22 +7,40 @@ public class BuildingSystem : MonoBehaviour
     public Material validMaterial;
     public Material invalidMaterial;
 
-    bool canPlace = true;
-    Renderer[] previewRenderers;
     [Header("Buildings")]
     public BuildingData[] buildings;
+    public BookController bookController;
+    public float snapDistance = 2f;
+    public float rotationStep = 45f;
 
     GameObject previewObject;
     BuildingData currentBuilding;
 
-    public float snapDistance = 2f;
-    public float rotationStep = 45f;
+    Renderer[] previewRenderers;
 
+    bool canPlace = true;
     float currentRotation = 0f;
+
+    // 🔥 ВЫЗЫВАЕТСЯ ИЗ UI (кнопок книги)
+    public void SelectBuildingByUI(BuildingData building)
+    {
+        currentBuilding = building;
+
+        currentRotation = 0f;
+
+        if (previewObject != null)
+            Destroy(previewObject);
+
+        // 🔥 ЗАКРЫВАЕМ КНИГУ
+        if (bookController != null)
+            bookController.CloseBookFromUI();
+    }
 
     void Update()
     {
-        HandleSelection();
+        // ❗ не строим если курсор на UI
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
+            return;
 
         if (currentBuilding == null)
             return;
@@ -40,54 +59,22 @@ public class BuildingSystem : MonoBehaviour
             CancelBuilding();
     }
 
-    void HandleSelection()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1)) SelectBuilding(0);
-        if (Input.GetKeyDown(KeyCode.Alpha2)) SelectBuilding(1);
-        if (Input.GetKeyDown(KeyCode.Alpha3)) SelectBuilding(2);
-        if (Input.GetKeyDown(KeyCode.Alpha4)) SelectBuilding(3);
-    }
-
-    void SelectBuilding(int index)
-    {
-        if (index >= buildings.Length)
-            return;
-
-        currentBuilding = buildings[index];
-
-        if (previewObject != null)
-            Destroy(previewObject);
-    }
-
     void CreatePreview()
     {
         previewObject = Instantiate(currentBuilding.constructionPrefab);
 
         previewRenderers = previewObject.GetComponentsInChildren<Renderer>();
 
+        // удаляем физику
         foreach (Collider col in previewObject.GetComponentsInChildren<Collider>())
             Destroy(col);
 
         foreach (Rigidbody rb in previewObject.GetComponentsInChildren<Rigidbody>())
             Destroy(rb);
+
+        SetPreviewMaterial(validMaterial);
     }
-    void CheckPlacement()
-    {
-        int mask = LayerMask.GetMask("Default", "Building");
 
-        Collider[] hits = Physics.OverlapBox(
-            previewObject.transform.position,
-            previewObject.transform.localScale / 2f,
-            previewObject.transform.rotation,
-            mask);
-
-        canPlace = hits.Length == 0;
-
-        foreach (Renderer r in previewRenderers)
-        {
-            r.material = canPlace ? validMaterial : invalidMaterial;
-        }
-    }
     void MovePreview()
     {
         Ray ray = new Ray(
@@ -99,6 +86,7 @@ public class BuildingSystem : MonoBehaviour
 
         previewObject.transform.position = hit.point;
 
+        // 🔥 SNAP SYSTEM
         int snapMask = LayerMask.GetMask("SnapPoint");
 
         Collider[] snapPoints =
@@ -124,7 +112,6 @@ public class BuildingSystem : MonoBehaviour
 
         if (closest != null)
         {
-            // Ищем SnapPoints у preview
             Transform previewSnapPoints =
                 previewObject.transform.Find("SnapPoints");
 
@@ -174,6 +161,29 @@ public class BuildingSystem : MonoBehaviour
 
         previewObject.transform.rotation =
             Quaternion.Euler(0, currentRotation, 0);
+    }
+
+    void CheckPlacement()
+    {
+        int mask = LayerMask.GetMask("Default", "Building");
+
+        Collider[] hits = Physics.OverlapBox(
+            previewObject.transform.position,
+            previewObject.transform.localScale / 2f,
+            previewObject.transform.rotation,
+            mask);
+
+        canPlace = hits.Length == 0;
+
+        SetPreviewMaterial(canPlace ? validMaterial : invalidMaterial);
+    }
+
+    void SetPreviewMaterial(Material mat)
+    {
+        foreach (Renderer r in previewRenderers)
+        {
+            r.material = mat;
+        }
     }
 
     void Place()

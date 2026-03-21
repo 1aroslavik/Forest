@@ -4,17 +4,18 @@ public class LogPickup : MonoBehaviour
 {
     [Header("Pickup")]
     public float pickupDistance = 3f;
-    public Transform holdPoint;
 
-    [Header("Animator")]
-    public Animator animator;
+    [Header("Hands System")]
+    public HandsController hands;
+    public GameObject carryHandsPrefab;
 
-    [Header("Arms")]
-    public GameObject axeArms;
-    public GameObject carryArms;
+    [Header("Weapon")]
+    public WeaponEquipment weaponEquipment;
 
     private GameObject worldLog;
     private GameObject carriedLog;
+
+    Transform currentHoldPoint; // ✅ добавили
 
     void Update()
     {
@@ -46,8 +47,37 @@ public class LogPickup : MonoBehaviour
 
                 worldLog = hit.collider.gameObject;
 
-                carriedLog = Instantiate(worldLog, holdPoint.position, holdPoint.rotation);
-                carriedLog.transform.SetParent(holdPoint);
+                // убираем оружие
+                if (weaponEquipment != null)
+                    weaponEquipment.Unequip();
+
+                // включаем руки
+                hands.SetCarry(carryHandsPrefab);
+
+                // 🔥 правильный поиск HoldPoint
+                currentHoldPoint = hands.GetComponentInChildren<Transform>(true);
+
+                foreach (Transform t in hands.GetComponentsInChildren<Transform>())
+                {
+                    if (t.name == "HoldPoint")
+                    {
+                        currentHoldPoint = t;
+                        break;
+                    }
+                }
+
+                if (currentHoldPoint == null)
+                {
+                    Debug.LogError("HoldPoint not found!");
+                    return;
+                }
+
+                // создаём бревно
+                carriedLog = Instantiate(worldLog,
+                    currentHoldPoint.position,
+                    currentHoldPoint.rotation);
+
+                carriedLog.transform.SetParent(currentHoldPoint);
                 carriedLog.transform.localPosition = Vector3.zero;
                 carriedLog.transform.localRotation = Quaternion.identity;
 
@@ -58,13 +88,6 @@ public class LogPickup : MonoBehaviour
                     Destroy(col);
 
                 worldLog.SetActive(false);
-
-                // анимация
-                animator.SetBool("isHolding", true);
-
-                // переключаем руки
-                if (axeArms) axeArms.SetActive(false);
-                if (carryArms) carryArms.SetActive(true);
             }
         }
     }
@@ -95,11 +118,8 @@ public class LogPickup : MonoBehaviour
 
                     worldLog = null;
 
-                    animator.SetBool("isHolding", false);
-
-                    // возвращаем руки
-                    if (axeArms) axeArms.SetActive(true);
-                    if (carryArms) carryArms.SetActive(false);
+                    if (hands != null)
+                        hands.ClearHands();
 
                     return true;
                 }
@@ -116,16 +136,13 @@ public class LogPickup : MonoBehaviour
         if (worldLog != null)
         {
             worldLog.transform.position =
-                holdPoint.position + transform.forward * 1f;
+                Camera.main.transform.position + Camera.main.transform.forward * 1.5f;
 
             worldLog.SetActive(true);
         }
 
-        animator.SetBool("isHolding", false);
-
-        // возвращаем руки
-        if (axeArms) axeArms.SetActive(true);
-        if (carryArms) carryArms.SetActive(false);
+        if (hands != null)
+            hands.ClearHands();
 
         carriedLog = null;
         worldLog = null;
